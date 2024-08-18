@@ -61,7 +61,7 @@ export default function Home() {
     return (
         <main
             className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-            <h1 className="text-5xl sm:text-7xl uppercase font-extrabold mb-12">Power Hungry Pets</h1>
+            <h1 className="text-5xl text-center sm:text-7xl uppercase font-extrabold mb-12">Power Hungry Pets</h1>
             <div className="flex flex-col gap-6 bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
                 <label htmlFor="username" className="text-lg font-medium">Name</label>
                 <input

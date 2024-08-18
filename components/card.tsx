@@ -1,12 +1,22 @@
 import React, {CSSProperties} from "react";
 import {Card} from "@/lib/types/card.type";
 
-export default function CardComponent({card, visible}: { card: Card, visible: boolean }) {
+interface CardComponentProps {
+    card: Card,
+    visible: boolean,
+    disabled: boolean
+}
+
+export default function CardComponent({card, visible, disabled}: CardComponentProps) {
 
     const {id, title, description, value, color, descColor} = card
 
+    function playCard(): void {
+        console.log(card)
+    }
+
     const styles: CSSProperties = {
-        // pointerEvents: interactive ? "all" : "none",
+        pointerEvents: visible && !disabled ? "all" : "none",
         // transform: size === "normal" ? "scale(1)" : "scale(0.5)",
         // position: size === "normal" ? "relative" : "absolute",
         // top: discardIndex !== undefined ? `${20 * discardIndex}px` : "0",
@@ -14,7 +24,7 @@ export default function CardComponent({card, visible}: { card: Card, visible: bo
 
     const cardInnerStyles: CSSProperties = {
         // display: opponent ? "none" : "flex",
-        // cursor: opponent ? "default" : "pointer",
+        cursor: visible && !disabled ? "pointer" : "default",
         // flexDirection: "column",
     };
 
@@ -29,6 +39,7 @@ export default function CardComponent({card, visible}: { card: Card, visible: bo
         <article
             id={id}
             style={styles}
+            onClick={playCard}
             className="card-bg flex flex-col bg-white w-[205px] min-h-[250px] rounded-lg overflow-hidden shadow-sm hover:shadow-lg border-2 border-slate-100 hover:border-yellow-400"
         >
             <div
