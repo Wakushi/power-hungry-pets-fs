@@ -1,7 +1,7 @@
 "use client"
+import {GameEvent, LocalEvent, ServerEvent} from "../lib/types/event.type";
 import {createContext, ReactNode, useContext} from "react"
 import {useRouter} from "next/navigation";
-import {GameEvent, LocalEvent, ServerEvent} from "../lib/types/event.type";
 import {useUser} from "@/services/user.service";
 
 interface EventServiceProviderProps {
@@ -37,6 +37,11 @@ export default function EventServiceProvider({children}: EventServiceProviderPro
             case ServerEvent.ROOM_FOUND:
                 setRoom(event.data)
                 router.push('room')
+                break
+
+            case ServerEvent.GAME_STARTED:
+                setRoom(event.data)
+                router.push('game')
                 break
         }
     }

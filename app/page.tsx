@@ -87,8 +87,9 @@ export default function Home() {
                         Create a Room
                     </button>
                     <button
-                        className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-full transition duration-200"
+                        className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-full transition duration-200 disabled:opacity-30 disabled:pointer-events-none"
                         onClick={joinRoom}
+                        disabled={!roomCode}
                     >
                         Join a Room
                     </button>

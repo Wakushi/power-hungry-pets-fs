@@ -1,13 +1,23 @@
 "use client";
 import {useUser} from "@/services/user.service";
-import Link from "next/link";
 import {FaCrown} from "react-icons/fa";
+import {useMultiplayerService} from "@/services/multiplayer.service";
+import {ClientEvent} from "@/lib/types/event.type";
+import BackButton from "@/components/back-button";
 
 export default function RoomPage() {
     const {user, room} = useUser();
+    const {emit} = useMultiplayerService()
 
     function isAdmin(userId: string): boolean {
         return userId === room?.adminUserId
+    }
+
+    function startGame(): void {
+        emit({
+            type: ClientEvent.START_GAME,
+            data: room
+        })
     }
 
     if (!user) {
@@ -34,7 +44,7 @@ export default function RoomPage() {
         <main
             className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
             <BackButton/>
-            <h2 className="text-3xl font-bold mb-8">Room n° {id}</h2>
+            <h2 className="text-3xl font-bold mb-8">Room ID #{id}</h2>
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h3 className="text-2xl font-semibold mb-4 text-center">Players</h3>
                 <div className="space-y-4">
@@ -51,20 +61,10 @@ export default function RoomPage() {
                 </div>
             </div>
             {isAdmin(user?.id) &&
-                <button className="mt-8 px-6 py-3 bg-green-500 rounded-full hover:bg-green-600 transition duration-200">
+                <button onClick={startGame}
+                        className="mt-8 px-6 py-3 bg-green-500 rounded-full hover:bg-green-600 transition duration-200">
                     Start Game
                 </button>}
         </main>
     );
-}
-
-function BackButton() {
-    return (
-        <Link
-            className="cursor-pointer absolute top-5 left-5 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
-            href="/"
-        >
-            Back to menu
-        </Link>
-    )
 }

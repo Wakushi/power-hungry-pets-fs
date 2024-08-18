@@ -1,6 +1,6 @@
 "use client"
-import {createContext, ReactNode, useContext, useEffect, useState} from "react"
 import {GameEvent} from "../lib/types/event.type";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react"
 import {useEventService} from "@/services/event.service";
 
 interface MultiplayerServiceProviderProps {
