@@ -1,18 +1,27 @@
+"use client"
 import React, {CSSProperties} from "react";
 import {Card} from "@/lib/types/card.type";
+import {useMultiplayerService} from "@/services/multiplayer.service";
+import {ClientEvent} from "@/lib/types/event.type";
 
 interface CardComponentProps {
     card: Card,
+    roomId: string,
     visible: boolean,
     disabled: boolean
 }
 
-export default function CardComponent({card, visible, disabled}: CardComponentProps) {
-
+export default function CardComponent({card, roomId, visible, disabled}: CardComponentProps) {
+    const {emit} = useMultiplayerService()
     const {id, title, description, value, color, descColor} = card
 
-    function playCard(): void {
-        console.log(card)
+    function onPlay(): void {
+        emit({
+            type: ClientEvent.CARD_PLAYED,
+            data: {
+                card, roomId
+            }
+        })
     }
 
     const styles: CSSProperties = {
@@ -39,7 +48,7 @@ export default function CardComponent({card, visible, disabled}: CardComponentPr
         <article
             id={id}
             style={styles}
-            onClick={playCard}
+            onClick={onPlay}
             className="card-bg flex flex-col bg-white w-[205px] min-h-[250px] rounded-lg overflow-hidden shadow-sm hover:shadow-lg border-2 border-slate-100 hover:border-yellow-400"
         >
             <div

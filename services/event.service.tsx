@@ -43,6 +43,10 @@ export default function EventServiceProvider({children}: EventServiceProviderPro
                 setRoom(event.data)
                 router.push('game')
                 break
+
+            case ServerEvent.OPEN_PLAYER_SELECTION:
+                console.log("Event: ", event)
+                break
         }
     }
 

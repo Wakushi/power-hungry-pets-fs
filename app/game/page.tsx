@@ -52,11 +52,12 @@ export default function GamePage() {
             <h2 className="text-2xl font-bold">{isClientPlayerTurn() ? 'Your turn' : `${getActivePlayer().name}'s turn`}</h2>
             <div className="flex flex-col gap-8 w-full max-w-5xl">
                 {opponents.map((player) => (
-                    <PlayerMat key={player.id} player={player} isCurrentUser={isClientPlayer(player.id)}
+                    <PlayerMat key={player.id} player={player} roomId={room.id}
+                               isCurrentUser={isClientPlayer(player.id)}
                                isCurrentUserTurn={isClientPlayerTurn()}/>
                 ))}
             </div>
-            <PlayerMat key={clientPlayer.id} player={clientPlayer} isCurrentUser={true}
+            <PlayerMat key={clientPlayer.id} player={clientPlayer} roomId={room.id} isCurrentUser={true}
                        isCurrentUserTurn={isClientPlayerTurn()}/>
         </main>
     );
@@ -64,11 +65,12 @@ export default function GamePage() {
 
 interface PlayerMatProps {
     player: Player;
+    roomId: string
     isCurrentUser: boolean;
     isCurrentUserTurn: boolean
 }
 
-function PlayerMat({player, isCurrentUser, isCurrentUserTurn}: PlayerMatProps) {
+function PlayerMat({player, roomId, isCurrentUser, isCurrentUserTurn}: PlayerMatProps) {
     return (
         <div
             className={clsx("relative bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center min-w-[500px] w-full", {
@@ -77,7 +79,9 @@ function PlayerMat({player, isCurrentUser, isCurrentUserTurn}: PlayerMatProps) {
             <h2 className="absolute top-5 right-5 font-bold mb-4">{isCurrentUser ? 'You' : player.name}</h2>
             <div className="flex flex-wrap justify-center gap-2">
                 {player.hand.map((card) => (
-                    <CardComponent key={card.id} card={card} disabled={!isCurrentUserTurn} visible={isCurrentUser}/>
+                    <CardComponent key={card.id} card={card} roomId={roomId} disabled={!isCurrentUserTurn}
+                                   visible={isCurrentUser}
+                    />
                 ))}
             </div>
         </div>
