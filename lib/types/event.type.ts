@@ -1,0 +1,23 @@
+export enum ClientEvent {
+    CREATE_ROOM = "CREATE_ROOM",
+    USER_JOINED = "USER_JOINED",
+    CARD_PLAYED = "CARD_PLAYED",
+    PLAYER_SELECTED = "PLAYER_SELECTED",
+    INSERT_CARD = "INSERT_CARD",
+    SWITCH_CARD = "SWITCH_CARD",
+}
+
+export enum ServerEvent {
+    ROOM_CREATED = "ROOM_CREATED",
+    GAME_STARTED = "GAME_STARTED",
+    OPEN_PLAYER_SELECTION = "OPEN_PLAYER_SELECTION",
+    TOGGLE_CARD_SELECTION = "TOGGLE_CARD_SELECTION",
+    NEXT_TURN = "NEXT_TURN",
+    GAME_OVER = "GAME_OVER",
+    OPEN_CARD_VIEW = "OPEN_CARD_VIEW",
+}
+
+export type GameEvent = {
+    type: ClientEvent | ServerEvent
+    data?: any
+}
