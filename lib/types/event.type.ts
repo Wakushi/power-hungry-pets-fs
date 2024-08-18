@@ -1,5 +1,6 @@
 export enum ClientEvent {
     CREATE_ROOM = "CREATE_ROOM",
+    JOIN_ROOM = "JOIN_ROOM",
     USER_JOINED = "USER_JOINED",
     CARD_PLAYED = "CARD_PLAYED",
     PLAYER_SELECTED = "PLAYER_SELECTED",
@@ -9,12 +10,18 @@ export enum ClientEvent {
 
 export enum ServerEvent {
     ROOM_CREATED = "ROOM_CREATED",
+    ROOM_NOT_FOUND = "ROOM_NOT_FOUND",
+    ROOM_FOUND = "ROOM_FOUND",
     GAME_STARTED = "GAME_STARTED",
     OPEN_PLAYER_SELECTION = "OPEN_PLAYER_SELECTION",
     TOGGLE_CARD_SELECTION = "TOGGLE_CARD_SELECTION",
+    OPEN_CARD_VIEW = "OPEN_CARD_VIEW",
     NEXT_TURN = "NEXT_TURN",
     GAME_OVER = "GAME_OVER",
-    OPEN_CARD_VIEW = "OPEN_CARD_VIEW",
+}
+
+export enum LocalEvent {
+    ROOM_NOT_FOUND = "ROOM_NOT_FOUND"
 }
 
 export type GameEvent = {

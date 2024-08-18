@@ -1,7 +1,8 @@
 "use client"
 import {createContext, ReactNode, useContext} from "react"
 import {useRouter} from "next/navigation";
-import {GameEvent, ServerEvent} from "../lib/types/event.type";
+import {GameEvent, LocalEvent, ServerEvent} from "../lib/types/event.type";
+import {useUser} from "@/services/user.service";
 
 interface EventServiceProviderProps {
     children: ReactNode
@@ -18,11 +19,23 @@ const EventService = createContext<EventServiceProps>({
 
 export default function EventServiceProvider({children}: EventServiceProviderProps) {
     const router = useRouter()
+    const {setRoom} = useUser()
 
     function dispatch(event: GameEvent): void {
         switch (event.type) {
             case ServerEvent.ROOM_CREATED:
-                console.log("Room created event: ", event)
+                setRoom(event.data)
+                router.push('room')
+                break
+
+            case ServerEvent.ROOM_NOT_FOUND:
+                document.dispatchEvent(
+                    new CustomEvent(LocalEvent.ROOM_NOT_FOUND, {detail: event.data})
+                )
+                break
+
+            case ServerEvent.ROOM_FOUND:
+                setRoom(event.data)
                 router.push('room')
                 break
         }

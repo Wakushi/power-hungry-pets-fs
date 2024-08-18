@@ -1,5 +1,5 @@
 "use client"
-import {createContext, ReactNode, useContext, useEffect} from "react"
+import {createContext, ReactNode, useContext, useEffect, useState} from "react"
 import {GameEvent} from "../lib/types/event.type";
 import {useEventService} from "@/services/event.service";
 
@@ -18,7 +18,7 @@ const MultiplayerService = createContext<MultiplayerServiceProps>({
 
 export default function MultiplayerServiceProvider({children}: MultiplayerServiceProviderProps) {
 
-    let socket: WebSocket
+    const [socket, setSocket] = useState<WebSocket | null>(null)
     const {dispatch} = useEventService()
 
     useEffect(() => {
@@ -29,13 +29,13 @@ export default function MultiplayerServiceProvider({children}: MultiplayerServic
 
 
     function initSocket() {
-        socket = new WebSocket("ws://localhost:3000")
+        const newSocket = new WebSocket("ws://localhost:3000")
 
-        socket.addEventListener("open", () => {
+        newSocket.addEventListener("open", () => {
             console.log("Connected to WS Server")
         })
 
-        socket.addEventListener("message", async (message) => {
+        newSocket.addEventListener("message", async (message) => {
             if (message.data instanceof Blob) {
                 const text = await message.data.text()
                 dispatch(JSON.parse(text))
@@ -44,9 +44,12 @@ export default function MultiplayerServiceProvider({children}: MultiplayerServic
 
             dispatch(JSON.parse(message.data))
         })
+
+        setSocket(newSocket)
     }
 
     function emit(event: GameEvent): void {
+        if (!socket) return
         socket.send(JSON.stringify(event))
     }
 
