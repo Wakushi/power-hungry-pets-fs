@@ -46,7 +46,7 @@ export default function GamePage() {
         >
             <BackButton/>
             <button
-                className="cursor-pointer absolute top-5 right-5 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                className="cursor-pointer absolute top-5 right-5 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 z-[99]"
                 onClick={() => console.log('Room: ', room)}
             >
                 Debug
@@ -72,7 +72,7 @@ export default function GamePage() {
                 isCurrentUserTurn={isClientPlayerTurn()}
             />
             {showPlayerSelectionModal && <PlayerSelectionModal/>}
-            {showCardSelectionModal && <CardSelectionModal/>}
+            {showCardSelectionModal && <CardSelectionModal roomId={room.id}/>}
         </main>
     );
 }
@@ -91,10 +91,22 @@ function PlayerSelectionModal() {
     )
 }
 
-function CardSelectionModal() {
+function CardSelectionModal({roomId}: { roomId: string }) {
     return (
-        <div>
-            {availableCards.map(card => <CardComponent card={card} visible={true} disabled={false}/>)}
+        <div
+            className="absolute top-0 left-0 h-full w-full bg-black-modal flex flex-wrap justify-center items-center z-[4]"
+        >
+            <div className="flex flex-wrap justify-center items-center gap-4 scale-50">
+                {availableCards.map(card =>
+                    <CardComponent
+                        key={card.value}
+                        card={card}
+                        roomId={roomId}
+                        visible={true}
+                        disabled={false}
+                    />
+                )}
+            </div>
         </div>
     )
 }

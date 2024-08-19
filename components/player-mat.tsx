@@ -4,6 +4,7 @@ import {clsx} from "clsx";
 import CardComponent from "@/components/card";
 import {useMultiplayerService} from "@/services/multiplayer.service";
 import {ClientEvent} from "@/lib/types/event.type";
+import {useUser} from "@/services/user.service";
 
 interface PlayerMatProps {
     player: Player;
@@ -22,9 +23,12 @@ export default function PlayerMat({
                                   }: PlayerMatProps) {
 
     const {emit} = useMultiplayerService()
+    const {setShowPlayerSelectionModal} = useUser()
 
     function onSelectPlayer(): void {
         if (!playerSelectionMode) return
+
+        setShowPlayerSelectionModal(false)
 
         emit({
             type: ClientEvent.PLAYER_SELECTED,

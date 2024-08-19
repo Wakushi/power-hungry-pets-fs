@@ -3,6 +3,7 @@ import {GameEvent, LocalEvent, ServerEvent} from "@/lib/types/event.type";
 import {createContext, ReactNode, useContext} from "react"
 import {useRouter} from "next/navigation";
 import {useUser} from "@/services/user.service";
+import {Room} from "@/lib/types/room.type";
 
 interface EventServiceProviderProps {
     children: ReactNode
@@ -22,7 +23,6 @@ export default function EventServiceProvider({children}: EventServiceProviderPro
     const {setRoom, setShowPlayerSelectionModal, setShowCardSelectionModal} = useUser()
 
     function dispatch(event: GameEvent): void {
-        console.log('Received event: ', event)
         switch (event.type) {
             case ServerEvent.ROOM_CREATED:
                 setRoom(event.data)
@@ -51,6 +51,14 @@ export default function EventServiceProvider({children}: EventServiceProviderPro
 
             case ServerEvent.TOGGLE_CARD_SELECTION:
                 setShowCardSelectionModal(true)
+                break
+
+            case ServerEvent.NEXT_TURN:
+                setRoom((prevRoom) => {
+                    if (!prevRoom) return null;
+                    const updatedRoom: Room = {...prevRoom, game: event.data};
+                    return updatedRoom;
+                });
                 break
         }
     }

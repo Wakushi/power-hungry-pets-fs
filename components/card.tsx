@@ -3,19 +3,25 @@ import React, {CSSProperties} from "react";
 import {Card} from "@/lib/types/card.type";
 import {useMultiplayerService} from "@/services/multiplayer.service";
 import {ClientEvent} from "@/lib/types/event.type";
+import {useUser} from "@/services/user.service";
 
 interface CardComponentProps {
     card: Card,
-    roomId?: string,
+    roomId: string,
     visible: boolean,
     disabled: boolean
 }
 
 export default function CardComponent({card, roomId, visible, disabled}: CardComponentProps) {
     const {emit} = useMultiplayerService()
+    const {showCardSelectionModal, setShowCardSelectionModal} = useUser()
     const {id, title, description, value, color, descColor} = card
 
     function onPlay(): void {
+        if (showCardSelectionModal) {
+            setShowCardSelectionModal(false)
+        }
+
         emit({
             type: ClientEvent.CARD_PLAYED,
             data: {
@@ -26,15 +32,10 @@ export default function CardComponent({card, roomId, visible, disabled}: CardCom
 
     const styles: CSSProperties = {
         pointerEvents: visible && !disabled ? "all" : "none",
-        // transform: size === "normal" ? "scale(1)" : "scale(0.5)",
-        // position: size === "normal" ? "relative" : "absolute",
-        // top: discardIndex !== undefined ? `${20 * discardIndex}px` : "0",
     };
 
     const cardInnerStyles: CSSProperties = {
-        // display: opponent ? "none" : "flex",
         cursor: visible && !disabled ? "pointer" : "default",
-        // flexDirection: "column",
     };
 
     if (!visible) {
@@ -52,7 +53,7 @@ export default function CardComponent({card, roomId, visible, disabled}: CardCom
             className="card-bg flex flex-col bg-white w-[205px] min-h-[250px] rounded-lg overflow-hidden shadow-sm hover:shadow-lg border-2 border-slate-100 hover:border-yellow-400"
         >
             <div
-                className="flex-col min-h-[250px]"
+                className="flex flex-col min-h-[250px]"
                 style={cardInnerStyles}
             >
                 <div

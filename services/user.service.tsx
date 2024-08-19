@@ -7,14 +7,14 @@ import {Room} from "@/lib/types/room.type";
 
 interface UserServiceProps {
     user: User | null;
-    setUser: (user: User) => void;
+    setUser: (user: User | ((prevUser: User | null) => User | null)) => void;
     createUser: (name: string) => User;
     room: Room | null;
-    setRoom: (room: Room) => void
+    setRoom: (room: Room | ((prevRoom: Room | null) => Room | null)) => void;
     showPlayerSelectionModal: boolean;
-    setShowPlayerSelectionModal: (show: boolean) => void
+    setShowPlayerSelectionModal: (show: boolean | ((prevShow: boolean) => boolean)) => void;
     showCardSelectionModal: boolean;
-    setShowCardSelectionModal: (show: boolean) => void
+    setShowCardSelectionModal: (show: boolean | ((prevShow: boolean) => boolean)) => void;
 }
 
 const UserContext = createContext<UserServiceProps>({
@@ -42,7 +42,6 @@ export function UserServiceProvider({children}: UserProviderProps) {
 
     const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState<boolean>(false)
     const [showCardSelectionModal, setShowCardSelectionModal] = useState<boolean>(false)
-
 
     function createUser(name: string): User {
         const id = uuidv4();
