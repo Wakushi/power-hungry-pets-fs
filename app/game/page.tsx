@@ -1,12 +1,13 @@
 "use client";
-import {useUser} from "@/services/user.service";
 import {Player} from "@/lib/types/player.type";
+import {useUser} from "@/services/user.service";
 import BackButton from "@/components/back-button";
+import PlayerMat from "@/components/player-mat";
+import {availableCards} from "@/lib/data/card-data";
 import CardComponent from "@/components/card";
-import {clsx} from "clsx";
 
 export default function GamePage() {
-    const {room, user} = useUser();
+    const {room, user, showPlayerSelectionModal, showCardSelectionModal} = useUser();
 
     function isClientPlayer(playerId: string): boolean {
         return playerId === user?.id
@@ -41,7 +42,8 @@ export default function GamePage() {
 
     return (
         <main
-            className="flex flex-col gap-8 items-center justify-center h-screen bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4">
+            className="relative flex flex-col gap-8 items-center justify-center h-screen bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4"
+        >
             <BackButton/>
             <button
                 className="cursor-pointer absolute top-5 right-5 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
@@ -52,38 +54,47 @@ export default function GamePage() {
             <h2 className="text-2xl font-bold">{isClientPlayerTurn() ? 'Your turn' : `${getActivePlayer().name}'s turn`}</h2>
             <div className="flex flex-col gap-8 w-full max-w-5xl">
                 {opponents.map((player) => (
-                    <PlayerMat key={player.id} player={player} roomId={room.id}
-                               isCurrentUser={isClientPlayer(player.id)}
-                               isCurrentUserTurn={isClientPlayerTurn()}/>
+                    <PlayerMat
+                        key={player.id}
+                        player={player}
+                        roomId={room.id}
+                        isCurrentUser={isClientPlayer(player.id)}
+                        isCurrentUserTurn={isClientPlayerTurn()}
+                        playerSelectionMode={showPlayerSelectionModal}
+                    />
                 ))}
             </div>
-            <PlayerMat key={clientPlayer.id} player={clientPlayer} roomId={room.id} isCurrentUser={true}
-                       isCurrentUserTurn={isClientPlayerTurn()}/>
+            <PlayerMat
+                key={clientPlayer.id}
+                player={clientPlayer}
+                roomId={room.id}
+                isCurrentUser={true}
+                isCurrentUserTurn={isClientPlayerTurn()}
+            />
+            {showPlayerSelectionModal && <PlayerSelectionModal/>}
+            {showCardSelectionModal && <CardSelectionModal/>}
         </main>
     );
 }
 
-interface PlayerMatProps {
-    player: Player;
-    roomId: string
-    isCurrentUser: boolean;
-    isCurrentUserTurn: boolean
-}
-
-function PlayerMat({player, roomId, isCurrentUser, isCurrentUserTurn}: PlayerMatProps) {
+function PlayerSelectionModal() {
     return (
         <div
-            className={clsx("relative bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center min-w-[500px] w-full", {
-                "opacity-30": isCurrentUser && !isCurrentUserTurn,
-            })}>
-            <h2 className="absolute top-5 right-5 font-bold mb-4">{isCurrentUser ? 'You' : player.name}</h2>
-            <div className="flex flex-wrap justify-center gap-2">
-                {player.hand.map((card) => (
-                    <CardComponent key={card.id} card={card} roomId={roomId} disabled={!isCurrentUserTurn}
-                                   visible={isCurrentUser}
-                    />
-                ))}
+            className="absolute top-0 left-0 h-full w-full bg-black-modal z-[3]"
+        >
+            <div
+                className="absolute top-5 left-5 text-white font-bold text-xl uppercase"
+            >
+                Select a player
             </div>
         </div>
-    );
+    )
+}
+
+function CardSelectionModal() {
+    return (
+        <div>
+            {availableCards.map(card => <CardComponent card={card} visible={true} disabled={false}/>)}
+        </div>
+    )
 }

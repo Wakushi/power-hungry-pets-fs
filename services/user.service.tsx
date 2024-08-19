@@ -11,6 +11,10 @@ interface UserServiceProps {
     createUser: (name: string) => User;
     room: Room | null;
     setRoom: (room: Room) => void
+    showPlayerSelectionModal: boolean;
+    setShowPlayerSelectionModal: (show: boolean) => void
+    showCardSelectionModal: boolean;
+    setShowCardSelectionModal: (show: boolean) => void
 }
 
 const UserContext = createContext<UserServiceProps>({
@@ -19,7 +23,13 @@ const UserContext = createContext<UserServiceProps>({
     },
     createUser: () => ({id: "", name: ""}),
     room: null,
-    setRoom: () => null
+    setRoom: () => null,
+    showPlayerSelectionModal: false,
+    setShowPlayerSelectionModal: () => {
+    },
+    showCardSelectionModal: false,
+    setShowCardSelectionModal: () => {
+    }
 });
 
 interface UserProviderProps {
@@ -29,6 +39,10 @@ interface UserProviderProps {
 export function UserServiceProvider({children}: UserProviderProps) {
     const [user, setUser] = useState<User | null>(null)
     const [room, setRoom] = useState<Room | null>(null)
+
+    const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState<boolean>(false)
+    const [showCardSelectionModal, setShowCardSelectionModal] = useState<boolean>(false)
+
 
     function createUser(name: string): User {
         const id = uuidv4();
@@ -42,7 +56,11 @@ export function UserServiceProvider({children}: UserProviderProps) {
         setUser,
         createUser,
         room,
-        setRoom
+        setRoom,
+        showPlayerSelectionModal,
+        setShowPlayerSelectionModal,
+        showCardSelectionModal,
+        setShowCardSelectionModal
     };
 
     return (

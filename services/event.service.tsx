@@ -1,5 +1,5 @@
 "use client"
-import {GameEvent, LocalEvent, ServerEvent} from "../lib/types/event.type";
+import {GameEvent, LocalEvent, ServerEvent} from "@/lib/types/event.type";
 import {createContext, ReactNode, useContext} from "react"
 import {useRouter} from "next/navigation";
 import {useUser} from "@/services/user.service";
@@ -19,9 +19,10 @@ const EventService = createContext<EventServiceProps>({
 
 export default function EventServiceProvider({children}: EventServiceProviderProps) {
     const router = useRouter()
-    const {setRoom} = useUser()
+    const {setRoom, setShowPlayerSelectionModal, setShowCardSelectionModal} = useUser()
 
     function dispatch(event: GameEvent): void {
+        console.log('Received event: ', event)
         switch (event.type) {
             case ServerEvent.ROOM_CREATED:
                 setRoom(event.data)
@@ -45,7 +46,11 @@ export default function EventServiceProvider({children}: EventServiceProviderPro
                 break
 
             case ServerEvent.OPEN_PLAYER_SELECTION:
-                console.log("Event: ", event)
+                setShowPlayerSelectionModal(true)
+                break
+
+            case ServerEvent.TOGGLE_CARD_SELECTION:
+                setShowCardSelectionModal(true)
                 break
         }
     }

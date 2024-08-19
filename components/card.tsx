@@ -6,7 +6,7 @@ import {ClientEvent} from "@/lib/types/event.type";
 
 interface CardComponentProps {
     card: Card,
-    roomId: string,
+    roomId?: string,
     visible: boolean,
     disabled: boolean
 }
