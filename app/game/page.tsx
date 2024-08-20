@@ -5,9 +5,11 @@ import BackButton from "@/components/back-button";
 import PlayerMat from "@/components/player-mat";
 import {availableCards} from "@/lib/data/card-data";
 import CardComponent from "@/components/card";
+import GameOverModal from "@/components/game-over-modal";
+import CardViewModal from "@/components/card-view-modal";
 
 export default function GamePage() {
-    const {room, user, showPlayerSelectionModal, showCardSelectionModal} = useUser();
+    const {room, user, showPlayerSelectionModal, showCardSelectionModal, showCardViewModal} = useUser();
 
     function isClientPlayer(playerId: string): boolean {
         return playerId === user?.id
@@ -37,8 +39,10 @@ export default function GamePage() {
         );
     }
 
-    const opponents = room.game._players.filter(p => !isClientPlayer(p.id))
-    const [clientPlayer] = room.game._players.filter(p => isClientPlayer(p.id))
+    const {game} = room
+
+    const opponents = game._players.filter(p => !isClientPlayer(p.id))
+    const [clientPlayer] = game._players.filter(p => isClientPlayer(p.id))
 
     return (
         <main
@@ -73,6 +77,9 @@ export default function GamePage() {
             />
             {showPlayerSelectionModal && <PlayerSelectionModal/>}
             {showCardSelectionModal && <CardSelectionModal roomId={room.id}/>}
+            {showCardViewModal && <CardViewModal room={room}/>}
+            {game?._gameOver &&
+                <GameOverModal winner={game._lastWinner} hasClientWon={game._lastWinner.id === user.id}/>}
         </main>
     );
 }

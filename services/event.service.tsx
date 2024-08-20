@@ -20,7 +20,7 @@ const EventService = createContext<EventServiceProps>({
 
 export default function EventServiceProvider({children}: EventServiceProviderProps) {
     const router = useRouter()
-    const {setRoom, setShowPlayerSelectionModal, setShowCardSelectionModal} = useUser()
+    const {setRoom, setShowPlayerSelectionModal, setShowCardSelectionModal, setShowCardViewModal} = useUser()
 
     function dispatch(event: GameEvent): void {
         switch (event.type) {
@@ -53,7 +53,24 @@ export default function EventServiceProvider({children}: EventServiceProviderPro
                 setShowCardSelectionModal(true)
                 break
 
+            case ServerEvent.OPEN_CARD_VIEW:
+                setRoom((prevRoom) => {
+                    if (!prevRoom) return null;
+                    const updatedRoom: Room = {...prevRoom, game: event.data};
+                    return updatedRoom;
+                });
+                setShowCardViewModal(true)
+                break
+
             case ServerEvent.NEXT_TURN:
+                setRoom((prevRoom) => {
+                    if (!prevRoom) return null;
+                    const updatedRoom: Room = {...prevRoom, game: event.data};
+                    return updatedRoom;
+                });
+                break
+
+            case ServerEvent.GAME_OVER:
                 setRoom((prevRoom) => {
                     if (!prevRoom) return null;
                     const updatedRoom: Room = {...prevRoom, game: event.data};

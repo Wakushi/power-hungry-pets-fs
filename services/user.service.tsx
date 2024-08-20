@@ -15,6 +15,8 @@ interface UserServiceProps {
     setShowPlayerSelectionModal: (show: boolean | ((prevShow: boolean) => boolean)) => void;
     showCardSelectionModal: boolean;
     setShowCardSelectionModal: (show: boolean | ((prevShow: boolean) => boolean)) => void;
+    showCardViewModal: boolean;
+    setShowCardViewModal: (show: boolean | ((prevShow: boolean) => boolean)) => void;
 }
 
 const UserContext = createContext<UserServiceProps>({
@@ -29,6 +31,9 @@ const UserContext = createContext<UserServiceProps>({
     },
     showCardSelectionModal: false,
     setShowCardSelectionModal: () => {
+    },
+    showCardViewModal: false,
+    setShowCardViewModal: () => {
     }
 });
 
@@ -42,6 +47,7 @@ export function UserServiceProvider({children}: UserProviderProps) {
 
     const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState<boolean>(false)
     const [showCardSelectionModal, setShowCardSelectionModal] = useState<boolean>(false)
+    const [showCardViewModal, setShowCardViewModal] = useState<boolean>(false)
 
     function createUser(name: string): User {
         const id = uuidv4();
@@ -59,7 +65,9 @@ export function UserServiceProvider({children}: UserProviderProps) {
         showPlayerSelectionModal,
         setShowPlayerSelectionModal,
         showCardSelectionModal,
-        setShowCardSelectionModal
+        setShowCardSelectionModal,
+        showCardViewModal,
+        setShowCardViewModal
     };
 
     return (
