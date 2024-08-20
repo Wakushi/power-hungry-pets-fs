@@ -7,9 +7,15 @@ import GameOverModal from "@/components/game-over-modal";
 import CardViewModal from "@/components/card-view-modal";
 import PlayerSelectionModal from "@/components/player-selection-modal";
 import CardSelectionModal from "@/components/card-selection-modal";
+import DiscardModal from "@/components/discard-modal";
+import {Card} from "@/lib/types/card.type";
+import {useState} from "react";
 
 export default function GamePage() {
     const {room, user, showPlayerSelectionModal, showCardSelectionModal, showCardViewModal} = useUser();
+
+    const [showDiscard, setShowDiscard] = useState<boolean>(false)
+    const [shownPlayerDiscard, setShownPlayerDiscard] = useState<Card[]>([])
 
     function isClientPlayer(playerId: string): boolean {
         return playerId === user?.id
@@ -49,14 +55,8 @@ export default function GamePage() {
             className="relative flex flex-col gap-8 items-center justify-center h-screen bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4"
         >
             <BackButton/>
-            <button
-                className="cursor-pointer absolute top-5 right-5 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 z-[99]"
-                onClick={() => console.log('Room: ', room)}
-            >
-                Debug
-            </button>
             <h2 className="text-2xl font-bold">{isClientPlayerTurn() ? 'Your turn' : `${getActivePlayer().name}'s turn`}</h2>
-            <div className="flex flex-col gap-8 w-full max-w-5xl">
+            <div className="flex items-center gap-8 w-full max-w-5xl">
                 {opponents.map((player) => (
                     <PlayerMat
                         key={player.id}
@@ -65,6 +65,10 @@ export default function GamePage() {
                         isCurrentUser={isClientPlayer(player.id)}
                         isCurrentUserTurn={isClientPlayerTurn()}
                         playerSelectionMode={showPlayerSelectionModal}
+                        onShowDiscard={() => {
+                            setShownPlayerDiscard(player.discards)
+                            setShowDiscard(true)
+                        }}
                     />
                 ))}
             </div>
@@ -74,12 +78,18 @@ export default function GamePage() {
                 roomId={room.id}
                 isCurrentUser={true}
                 isCurrentUserTurn={isClientPlayerTurn()}
+                onShowDiscard={() => {
+                    setShownPlayerDiscard(clientPlayer.discards)
+                    setShowDiscard(true)
+                }}
             />
             {showPlayerSelectionModal && <PlayerSelectionModal/>}
             {showCardSelectionModal && <CardSelectionModal roomId={room.id}/>}
             {showCardViewModal && <CardViewModal room={room}/>}
             {game?._gameOver &&
                 <GameOverModal winner={game._lastWinner} hasClientWon={game._lastWinner.id === user.id}/>}
+            {showDiscard &&
+                <DiscardModal discard={shownPlayerDiscard} roomId={room.id} setShowDiscard={setShowDiscard}/>}
         </main>
     );
 }
