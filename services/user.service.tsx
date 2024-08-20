@@ -17,6 +17,7 @@ interface UserServiceProps {
     setShowCardSelectionModal: (show: boolean | ((prevShow: boolean) => boolean)) => void;
     showCardViewModal: boolean;
     setShowCardViewModal: (show: boolean | ((prevShow: boolean) => boolean)) => void;
+    fetchLocalUser: () => User | null
 }
 
 const UserContext = createContext<UserServiceProps>({
@@ -34,7 +35,8 @@ const UserContext = createContext<UserServiceProps>({
     },
     showCardViewModal: false,
     setShowCardViewModal: () => {
-    }
+    },
+    fetchLocalUser: () => null
 });
 
 interface UserProviderProps {
@@ -50,10 +52,23 @@ export function UserServiceProvider({children}: UserProviderProps) {
     const [showCardViewModal, setShowCardViewModal] = useState<boolean>(false)
 
     function createUser(name: string): User {
+        if (user) return user
+
         const id = uuidv4();
         const newUser = {id, name};
+
+        localSaveUser(newUser)
         setUser(newUser);
         return newUser;
+    }
+
+    function localSaveUser(user: User): void {
+        localStorage.setItem('user', JSON.stringify(user))
+    }
+
+    function fetchLocalUser(): User | null {
+        const user = localStorage.getItem('user')
+        return user ? JSON.parse(user) : null
     }
 
     const contextValue = {
@@ -67,7 +82,8 @@ export function UserServiceProvider({children}: UserProviderProps) {
         showCardSelectionModal,
         setShowCardSelectionModal,
         showCardViewModal,
-        setShowCardViewModal
+        setShowCardViewModal,
+        fetchLocalUser
     };
 
     return (

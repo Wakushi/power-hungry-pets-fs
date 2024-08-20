@@ -3,10 +3,10 @@ import {Player} from "@/lib/types/player.type";
 import {useUser} from "@/services/user.service";
 import BackButton from "@/components/back-button";
 import PlayerMat from "@/components/player-mat";
-import {availableCards} from "@/lib/data/card-data";
-import CardComponent from "@/components/card";
 import GameOverModal from "@/components/game-over-modal";
 import CardViewModal from "@/components/card-view-modal";
+import PlayerSelectionModal from "@/components/player-selection-modal";
+import CardSelectionModal from "@/components/card-selection-modal";
 
 export default function GamePage() {
     const {room, user, showPlayerSelectionModal, showCardSelectionModal, showCardViewModal} = useUser();
@@ -84,36 +84,4 @@ export default function GamePage() {
     );
 }
 
-function PlayerSelectionModal() {
-    return (
-        <div
-            className="absolute top-0 left-0 h-full w-full bg-black-modal z-[3]"
-        >
-            <div
-                className="absolute top-5 left-5 text-white font-bold text-xl uppercase"
-            >
-                Select a player
-            </div>
-        </div>
-    )
-}
 
-function CardSelectionModal({roomId}: { roomId: string }) {
-    return (
-        <div
-            className="absolute top-0 left-0 h-full w-full bg-black-modal flex flex-wrap justify-center items-center z-[4]"
-        >
-            <div className="flex flex-wrap justify-center items-center gap-4 scale-50">
-                {availableCards.map(card =>
-                    <CardComponent
-                        key={card.value}
-                        card={card}
-                        roomId={roomId}
-                        visible={true}
-                        disabled={false}
-                    />
-                )}
-            </div>
-        </div>
-    )
-}

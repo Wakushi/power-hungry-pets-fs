@@ -5,13 +5,20 @@ import {useMultiplayerService} from "@/services/multiplayer.service";
 import {useUser} from "@/services/user.service";
 
 export default function Home() {
-    const {createUser} = useUser();
+    const {createUser, fetchLocalUser, setUser} = useUser();
     const {emit} = useMultiplayerService();
 
     useEffect(() => {
         document.addEventListener(LocalEvent.ROOM_NOT_FOUND, (event: any) => {
             setError("Couldn't find room #" + event.detail)
         })
+
+        const user = fetchLocalUser()
+
+        if (user) {
+            setUserName(user.name)
+            setUser(user)
+        }
     }, [])
 
     const [userName, setUserName] = useState<string>("");

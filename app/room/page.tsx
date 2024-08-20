@@ -4,6 +4,7 @@ import {FaCrown} from "react-icons/fa";
 import {useMultiplayerService} from "@/services/multiplayer.service";
 import {ClientEvent} from "@/lib/types/event.type";
 import BackButton from "@/components/back-button";
+import Copy from "@/components/copy";
 
 export default function RoomPage() {
     const {user, room} = useUser();
@@ -44,7 +45,8 @@ export default function RoomPage() {
         <main
             className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
             <BackButton/>
-            <h2 className="text-3xl font-bold mb-8">Room ID #{id}</h2>
+            <h2 className="text-3xl flex items-center gap-2 font-bold mb-8">Room ID #{id} <Copy contentToCopy={id}/>
+            </h2>
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h3 className="text-2xl font-semibold mb-4 text-center">Players</h3>
                 <div className="space-y-4">
